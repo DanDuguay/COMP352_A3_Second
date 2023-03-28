@@ -18,8 +18,8 @@ public class HeapPriorityQueue extends AbstractPriorityQueue
     protected int parent(int j) { return (j-1)/2;}
     protected int left(int j) { return 2*j+1;}
     protected int right(int j) { return 2*j+2;}
-    protected boolean hasLeft(int j) { return left(j) < getLastElement();}
-    protected boolean hasRight(int j) { return right(j) < getLastElement();}
+    protected boolean hasLeft(int j) { return left(j) <= getLastElement();}
+    protected boolean hasRight(int j) { return right(j) <= getLastElement();}
     protected boolean isFull() { return (size-1 == lastElement);}
 
     protected IEntry[] increaseHeapSize()
@@ -43,17 +43,24 @@ public class HeapPriorityQueue extends AbstractPriorityQueue
         while (j > 0)
         {
             int p = parent(j);
-            if (compare(heap[j], heap[p], isMinHeap)>=0) break;
+            if (compare(heap[j], heap[p], isMinHeap)<=0) break;
             swap(j,p);
             j = p;
         }
     }
     protected void downheap(int j)
     {
+        //System.out.println(j);
+        //System.out.println("Left(j) = " +left(j));
+        //System.out.println(hasLeft(j));
+        //System.out.println("Last Element: " + getLastElement());
         while(hasLeft(j))
         {
+            //System.out.println("Entered downheap loop.");
             int leftIndex = left(j);
             int childToSwapIndex = leftIndex;
+            //System.out.println("right(j) = " + right(j));
+            //System.out.println(hasRight(j));
             if (hasRight(j))
             {
                 int rightIndex = right(j);
@@ -65,10 +72,18 @@ public class HeapPriorityQueue extends AbstractPriorityQueue
             j = childToSwapIndex;
         }
     }
+
+    protected void heapify()
+    {
+        int startIndex = parent(lastElement);
+        for (int j = startIndex; j >= 0; j--)
+            downheap(j);
+    }
     public int getLastElement() { return lastElement;}
+    public int getNumberOfElements() { return lastElement+1;}
 
     public int getSize() { return heap.length;}
-    public IEntry min()
+    public IEntry top()
     {
         if (isEmpty()) return null;
         return heap[0];
@@ -84,7 +99,7 @@ public class HeapPriorityQueue extends AbstractPriorityQueue
         upheap(lastElement);
         return newest;
     }
-    public IEntry removeMin()
+    public IEntry removeTop()
     {
         if(isEmpty()) return null;
         IEntry answer = heap[0];

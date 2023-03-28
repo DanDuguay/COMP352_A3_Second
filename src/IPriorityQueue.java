@@ -4,6 +4,6 @@ public interface IPriorityQueue
     int getSize();
     boolean isEmpty();
     IEntry insert(int key, String value) throws IllegalArgumentException;
-    IEntry min();
-    IEntry removeMin();
+    IEntry top();
+    IEntry removeTop();
 }

@@ -18,8 +18,8 @@ public abstract class AbstractPriorityQueue implements IPriorityQueue
         protected void setValue(String value) {v = value;}
     }
 
-    private Comparator<Integer> comp;
-    protected AbstractPriorityQueue(Comparator<Integer> c) {comp = c;}
+    private DefaultComparator comp = new DefaultComparator();
+    protected AbstractPriorityQueue(Comparator<Integer> c) {}
     protected AbstractPriorityQueue() { this( new DefaultComparator());}
     protected int compare(IEntry a, IEntry b)
     {
@@ -27,7 +27,7 @@ public abstract class AbstractPriorityQueue implements IPriorityQueue
     }
     protected int compare(IEntry a, IEntry b, boolean isMinHeap)
     {
-        return comp.compare(a.getKey(),b.getKey());
+        return comp.compare(a.getKey(),b.getKey(),isMinHeap);
     }
     protected boolean checkKey(int key) throws IllegalArgumentException
     {

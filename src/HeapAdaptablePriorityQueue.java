@@ -15,7 +15,7 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         @Override
         public String toString()
         {
-            return String.valueOf(index);
+            return "( " + this.getKey() + ", " + this.getValue() + ", "+ this.getIndex()+ " )";
         }
     }
 
@@ -30,6 +30,19 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         if (j >= getLastElement() || heap[j] != locator)
             throw new IllegalArgumentException("Invalid entry");
         return locator;
+    }
+
+    protected String getState()
+    {
+        if (isMinHeap)
+            return "Current State: minHeap";
+        return "Current State: maxHeap";
+    }
+
+    protected void toggle()
+    {
+        isMinHeap = !isMinHeap;
+        heapify();
     }
     protected void swap(int i, int j)
     {
@@ -48,6 +61,8 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
 
     public IEntry insert(int key, String value) throws IllegalArgumentException
     {
+        if (isFull())
+            heap = increaseHeapSize();
         checkKey(key);
         lastElement++;
         IEntry newest = new AdaptablePQEntry(key,value,getLastElement());
@@ -56,22 +71,30 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         return newest;
     }
 
-    public void remove(IEntry entry) throws IllegalArgumentException
+    public IEntry remove(IEntry entry) throws IllegalArgumentException
     {
         AdaptablePQEntry locator = validate(entry);
         int j = locator.getIndex();
+        IEntry tempEntry;
         if (j == getLastElement())
         {
+            tempEntry = heap[lastElement];
             heap[lastElement] = null;
             lastElement--;
         }
         else
         {
             swap(j,lastElement);
+            tempEntry = heap[lastElement];
             heap[lastElement] = null;
             lastElement--;
             bubble(j);
         }
+        return tempEntry;
+    }
+    public IEntry removeTop()
+    {
+        return remove(heap[0]);
     }
     public void replaceKey(IEntry entry, int key) throws IllegalArgumentException
     {
@@ -87,12 +110,13 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         locator.setValue(value);
     }
 
+
     @Override
     public String toString()
     {
         for (int i = 0; i <= lastElement;i++)
         {
-            System.out.println("( " + heap[i].getKey() + ", " + heap[i].getValue() + ", "+ heap[i].toString()+ " )");
+            System.out.println(heap[i].toString());
         }
         return null;
     }
