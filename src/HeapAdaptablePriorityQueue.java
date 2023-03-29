@@ -32,6 +32,10 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         return locator;
     }
 
+    /**
+     * This function is used to determine if the heap is Min or Max.
+     * @return A string describing the state of the heap.
+     */
     protected String getState()
     {
         if (isMinHeap)
@@ -39,11 +43,20 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         return "Current State: maxHeap";
     }
 
+    /**
+     * toggles the heap from Min to Max or vice-versa. Heapify's the heap into the new state.
+     */
     protected void toggle()
     {
         isMinHeap = !isMinHeap;
         heapify();
     }
+
+    /**
+     * Swap two entries in the heap. Also adjusts the index after the swap.
+     * @param i The index of the first entry.
+     * @param j The index of the second entry.
+     */
     protected void swap(int i, int j)
     {
         super.swap(i,j);
@@ -51,6 +64,10 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         ((AdaptablePQEntry) heap[j]).setIndex(j);
     }
 
+    /**
+     * Determines if a upheap or downheap would be more efficient.
+     * @param j the index of the entry to downheap/upheap.
+     */
     protected void bubble(int j)
     {
         if (j > 0 && compare(heap[j], heap[parent(j)], isMinHeap) < 0)
@@ -59,6 +76,13 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
             downheap(j);
     }
 
+    /**
+     * Inserts a new entry into the queue
+     * @param key The key of the entry
+     * @param value The value of the entry
+     * @return the entry created and inserted.
+     * @throws IllegalArgumentException if the key or value is of the wrong type
+     */
     public IEntry insert(int key, String value) throws IllegalArgumentException
     {
         if (isFull())
@@ -71,6 +95,12 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         return newest;
     }
 
+    /**
+     * Removes the entry form the heap.
+     * @param entry the entry to remove.
+     * @return the removed entry
+     * @throws IllegalArgumentException if the entry is invalid.
+     */
     public IEntry remove(IEntry entry) throws IllegalArgumentException
     {
         AdaptablePQEntry locator = validate(entry);
@@ -92,10 +122,22 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         }
         return tempEntry;
     }
+
+    /**
+     * Uses the remove() method on the first index of the heap.
+     * @return returns the removed entry.
+     */
     public IEntry removeTop()
     {
         return remove(heap[0]);
     }
+
+    /**
+     * Replace the key of an entry and reajusts the heap order if necessary
+     * @param entry the entry to locate and modify
+     * @param key the new key value.
+     * @throws IllegalArgumentException if the entry or key are invalid
+     */
     public void replaceKey(IEntry entry, int key) throws IllegalArgumentException
     {
         AdaptablePQEntry locator = validate(entry);
@@ -104,6 +146,12 @@ public class HeapAdaptablePriorityQueue extends HeapPriorityQueue
         bubble(locator.getIndex());
     }
 
+    /**
+     * Replace the value of an entry.
+     * @param entry the entry to locate and modify
+     * @param value the new value
+     * @throws IllegalArgumentException if the entry is invalid
+     */
     public void replaceValue(IEntry entry, String value) throws  IllegalArgumentException
     {
         AdaptablePQEntry locator = validate(entry);
